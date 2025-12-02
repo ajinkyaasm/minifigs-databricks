@@ -1,0 +1,22 @@
+resources:
+  jobs:
+    MinifigsIngestion:
+      name: MinifigsIngestion
+      tasks:
+        - task_key: Ingestion
+          notebook_task:
+            notebook_path: ../../src/notebooks/Minifigs-cleaning.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+            source: WORKSPACE
+        - task_key: AutoLoaderStart
+          depends_on:
+            - task_key: Ingestion
+          notebook_task:
+            notebook_path: ../../src/notebooks/AutoLoader.ipynb
+            base_parameters:
+              catalog: ${var.catalog}
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
